@@ -13,8 +13,12 @@ namespace Kliensoldali2019_CP6OG3.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
-
-        Translator t = new Translator();
+        private Translator _t;
+        public Translator Translator
+        {
+            get { return _t; }
+            set { Set(ref _t, value); }
+        }
 
         private string _toTranslate;
         public string toTranslate
@@ -69,38 +73,73 @@ namespace Kliensoldali2019_CP6OG3.ViewModels
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             isLoading = true;
-            await t.init();
-            sourceLanguages = t.GetSourceLanguages();
-            targetLanguages = t.GetTargetLanguages(sourceLanguages[0]);
-           
-            t.sourceLang = sourceLanguages[0];
-            t.destLang = targetLanguages[7];
+            Translator = new Translator();
+            await Translator.init();
+            sourceLanguages = Translator.GetSourceLanguages();
+            targetLanguages = Translator.GetTargetLanguages(sourceLanguages[0]);
+            toTranslate = "";
+            Translator.sourceLang = sourceLanguages[0];
+            Translator.destLang = targetLanguages[7];
             await base.OnNavigatedToAsync(parameter, mode, state);
             isLoading = false;
         }
 
         public async Task Translate()
         {
+            ResetView();
+            Debug.WriteLine("CURRENT LANGUGAES: " + Translator.sourceLang + " -> " + Translator.destLang);
             isLoading = true;
-            JsonResult r = await t.translate(_toTranslate);
-            List<string> translations = r.GetTranslations();
-            otherResults = "";
-            foreach (string str in translations)
+            if(toTranslate == "")
             {
-                if (str == translations[0])
-                    mainResult = str;
-                else
+                isLoading = false;
+                toTranslate = "Ez a mező nem lehet üres!";
+                return;
+            }
+            try
+            {
+                JsonResult r = await Translator.translate(_toTranslate);
+                List<string> translations = r.GetTranslations();
+                otherResults = "";
+                foreach (string str in translations)
                 {
-                    otherResults += str + ", ";
+                    if (str == translations[0])
+                        mainResult = str;
+                    else
+                    {
+                        otherResults += str + ", ";
+                    }
                 }
+                if (otherResults.Length > 0)
+                {
+                    otherResults = otherResults.Remove(otherResults.Length - 2);
+                }
+                setExamples(r);
             }
-            if (otherResults.Length > 0)
+            catch (Exception e)
             {
-                otherResults = otherResults.Remove(otherResults.Length - 2);
+                Debug.WriteLine("EXCEPTION: " + e.Message);
+                ManageTranslationException(e);
             }
-            setExamples(r);
-            isLoading = false;
+            finally
+            {
+                isLoading = false;
+            }
+            
+        }
+        private void ManageTranslationException(Exception e)
+        {
+            if(e.Message == "404")
+            {
+                mainResult = "Nincs találat :(";
+            }
+        }
 
+        private void ResetView()
+        {
+            mainResult = "";
+            otherResults = "";
+            examplesSource = Array.Empty<string>();
+            examplesDest = Array.Empty<string>();
         }
 
         private void setExamples(JsonResult r)
@@ -127,7 +166,8 @@ namespace Kliensoldali2019_CP6OG3.ViewModels
 
         public void UpdateLanguages(string sourceLang)
         {
-            targetLanguages = t.GetTargetLanguages(sourceLang);
+            targetLanguages = Translator.GetTargetLanguages(sourceLang);
+
         }
     }
 }

@@ -17,16 +17,15 @@
     <Grid Margin="0,0,0,0">
         <Button x:Name="btn1" Content="Translate"  HorizontalAlignment="Left" Margin="452,117,0,0" VerticalAlignment="Top" Height="79" Width="176" Click="btnTranslate_Click"/>
         <TextBox x:Name="txt1" HorizontalAlignment="Right" Margin="0,117,698,0"  VerticalAlignment="Top" Height="35" Width="315" Text="{Binding toTranslate, Mode=TwoWay}"/>
-        <ComboBox  HorizontalAlignment="Right" Margin="0,57,863,0" VerticalAlignment="Top"  Width="150" ItemsSource="{Binding sourceLanguages}" 
-                   SelectionChanged="ComboBox_SelectionChanged_Source"/>
-        <ComboBox  HorizontalAlignment="Left" Margin="663,56,0,0" VerticalAlignment="Top"  Width="150" ItemsSource="{Binding targetLanguages}" SelectionChanged="ComboBox_SelectionChanged_Dest"/>
+        <ComboBox  HorizontalAlignment="Right" Margin="0,57,863,0" VerticalAlignment="Top"  Width="150" ItemsSource="{Binding sourceLanguages}" SelectedValue="{Binding Translator.sourceLang, Mode=TwoWay}"
+                   SelectionChanged="ComboBox_SelectionChanged_Source" />
+        <ComboBox  x:Name="cmbTarget" HorizontalAlignment="Left" Margin="663,56,0,0" VerticalAlignment="Top"  Width="150" ItemsSource="{Binding targetLanguages}" SelectedValue="{Binding Translator.destLang, Mode=TwoWay}"
+                   SelectionChanged="ComboBox_SelectionChanged_Dest" />
         <TextBlock Margin="955,549,0,0" Text="Czetter Gábor Péter" TextWrapping="Wrap" Foreground="LightGray" VerticalAlignment="Stretch"/>
         <TextBox HorizontalAlignment="Left" Margin="663,117,0,0"  VerticalAlignment="Top" Width="370" BorderThickness="2" BorderBrush="LightGray"
                  FontSize="20"  IsReadOnly="True" Text="{Binding mainResult}" />
         <TextBox HorizontalAlignment="Left" Margin="663,161,0,0"  VerticalAlignment="Top" Width="370" BorderThickness="1" BorderBrush="Gray"
                  FontSize="15" Foreground="Gray" IsReadOnly="True" Text="{Binding otherResults}"/>
-
-        <Button x:Name="btnCsere" Content="Swap languages" HorizontalAlignment="Left" Margin="477,56,0,0" VerticalAlignment="Top" />
 
         <Grid x:Name="grdExample" HorizontalAlignment="Center" Height="209" Margin="0,250,0,0" VerticalAlignment="Top" Width="1000" BorderBrush="LightGray" BorderThickness="1">
             <TextBlock Text="Examples" TextWrapping="Wrap" Foreground="LightGray" HorizontalAlignment="Stretch" Margin="1,1,1,1"/>

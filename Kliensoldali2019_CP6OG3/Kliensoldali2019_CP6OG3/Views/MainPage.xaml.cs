@@ -21,13 +21,14 @@ namespace Kliensoldali2019_CP6OG3.Views
         private void ComboBox_SelectionChanged_Source(object sender, SelectionChangedEventArgs e)
         {
             var cb = (ComboBox)sender;
-            Debug.WriteLine(cb.SelectedValue);
+            ViewModel.UpdateLanguages(cb.SelectedValue.ToString());
         }
 
         private void ComboBox_SelectionChanged_Dest(object sender, SelectionChangedEventArgs e)
         {
             var cb = (ComboBox)sender;
-            Debug.WriteLine(cb.SelectedValue);
+         
+           
         }
     }
 }

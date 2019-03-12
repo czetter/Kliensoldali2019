@@ -1,19 +1,20 @@
 ﻿using Kliensoldali2019_CP6OG3.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Kliensoldali2019_CP6OG3.Services
 {
-    class Translator
+    public class Translator
     {
         public Dictionary<String, List<String>> languageDictionary;
         String sourcelang;
         String destlang;
-        public String sourceLang { get { return this.sourcelang; } set { sourcelang = GetID(value); } }
-        public String destLang { get { return this.destlang; } set { destlang = GetID(value); } }
+        public String sourceLang { get { return this.sourcelang; } set { sourcelang = GetSourceID(value);} }
+        public String destLang { get { return this.destlang; } set { destlang = GetTargetID(value);  } }
         private JsonLanguage languages;
 
         private Requester r = new Requester();
@@ -52,6 +53,7 @@ namespace Kliensoldali2019_CP6OG3.Services
                     {
                         languageDictionary.Add(lr.sourceLanguage.language, new List<String>());
                         languageDictionary[lr.sourceLanguage.language].Add(lr.targetLanguage.language);
+                        Debug.WriteLine(lr.targetLanguage.id);
                     }
                 }
             }
@@ -74,15 +76,24 @@ namespace Kliensoldali2019_CP6OG3.Services
         {
             List<String> list = languageDictionary[source];
             return list.ToArray();
-
         }
 
-        private String GetID(String language)
+        private String GetSourceID(String language)
         {
             foreach (LanguageResult lr in languages.results)
             {
                 if (lr.sourceLanguage.language == language)
                     return lr.sourceLanguage.id;
+            }
+            return null;
+        }
+        private String GetTargetID(String language)
+        {
+            foreach (LanguageResult lr in languages.results)
+            {
+                if(lr.targetLanguage != null)
+                if (lr.targetLanguage.language == language)
+                    return lr.targetLanguage.id;
             }
             return null;
         }

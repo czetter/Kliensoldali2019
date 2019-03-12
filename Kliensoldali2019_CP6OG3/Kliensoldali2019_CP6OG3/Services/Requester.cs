@@ -34,14 +34,24 @@ namespace Kliensoldali2019_CP6OG3.Services
             HttpWebRequest req = null;
             req = (HttpWebRequest)HttpWebRequest.Create(uri);
 
-            using (var client = new HttpClient())
+            try
             {
+                var client = new HttpClient();
                 client.DefaultRequestHeaders.Add("app_id", appID);
                 client.DefaultRequestHeaders.Add("app_key", appKey);
                 var response = await client.GetAsync(uri);
                 var json = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine("RESPONSE STATUS: " + response.StatusCode+", "+(int)response.StatusCode);
+                if((int)response.StatusCode == 404)
+                {
+                    throw new Exception("404");
+                }
                 T result = JsonConvert.DeserializeObject<T>(json);
                 return result;
+            }catch(Exception e)
+            {
+                Debug.WriteLine("REGUESTER EXCPT: " + e.Message);
+                throw e;
             }
             
         }
