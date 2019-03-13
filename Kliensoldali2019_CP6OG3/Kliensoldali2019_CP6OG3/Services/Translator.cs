@@ -53,7 +53,6 @@ namespace Kliensoldali2019_CP6OG3.Services
                     {
                         languageDictionary.Add(lr.sourceLanguage.language, new List<String>());
                         languageDictionary[lr.sourceLanguage.language].Add(lr.targetLanguage.language);
-                        Debug.WriteLine(lr.targetLanguage.id);
                     }
                 }
             }

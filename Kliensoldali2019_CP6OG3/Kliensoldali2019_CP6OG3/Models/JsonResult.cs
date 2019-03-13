@@ -12,17 +12,38 @@ namespace Kliensoldali2019_CP6OG3.Models
     {
         public Metadata metadata { get; set; }
         public Result[] results { get; set; }
-            
+
         public List<string> GetTranslations()
         {
             List<string> translations = new List<string>();
-            if (results[0].lexicalEntries[0].entries[0].senses[0].translations != null)
-                foreach (Translation3 t in results[0].lexicalEntries[0].entries[0].senses[0].translations)
+
+            if (results[0].lexicalEntries[0].entries[0].senses != null)
+            {
+                foreach (Sens sense in results[0].lexicalEntries[0].entries[0].senses)
+                {
+                    if(sense.translations != null)
+                    foreach (Translation3 t in sense.translations)
+                    {
+                        translations.Add(t.text);
+                    }
+                }
+            }
+            if (translations.Count == 0)
+            {
+                translations = GetOtherTranslations();
+            }
+            return translations;
+        }
+
+        public List<string> GetOtherTranslations()
+        {
+            List<string> translations = new List<string>();
+            if (results[0].lexicalEntries[0].entries[0].senses[0].subsenses != null)
+                foreach (Translation1 t in results[0].lexicalEntries[0].entries[0].senses[0].subsenses[0].translations)
                 {
                     translations.Add(t.text);
                     Debug.WriteLine(t.text);
                 }
-
             return translations;
         }
 

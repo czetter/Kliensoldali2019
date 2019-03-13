@@ -17,10 +17,13 @@
     <Grid Margin="0,0,0,0">
         <Button x:Name="btn1" Content="Translate"  HorizontalAlignment="Left" Margin="452,117,0,0" VerticalAlignment="Top" Height="79" Width="176" Click="btnTranslate_Click"/>
         <TextBox x:Name="txt1" HorizontalAlignment="Right" Margin="0,117,698,0"  VerticalAlignment="Top" Height="35" Width="315" Text="{Binding toTranslate, Mode=TwoWay}"/>
+
+        <TextBlock Text="Source Language" TextWrapping="Wrap" Foreground="LightGray" Margin="87,37,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="145" Height="24"/>
         <ComboBox  HorizontalAlignment="Right" Margin="0,57,863,0" VerticalAlignment="Top"  Width="150" ItemsSource="{Binding sourceLanguages}" SelectedValue="{Binding Translator.sourceLang, Mode=TwoWay}"
-                   SelectionChanged="ComboBox_SelectionChanged_Source" />
+                   SelectionChanged="ComboBox_SelectionChanged_Source" SelectedIndex="{Binding idx}"/>
+        <TextBlock Text="Target Language" TextWrapping="Wrap" Foreground="LightGray" Margin="663,31,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="145" Height="24"/>
         <ComboBox  x:Name="cmbTarget" HorizontalAlignment="Left" Margin="663,56,0,0" VerticalAlignment="Top"  Width="150" ItemsSource="{Binding targetLanguages}" SelectedValue="{Binding Translator.destLang, Mode=TwoWay}"
-                   SelectionChanged="ComboBox_SelectionChanged_Dest" />
+                   SelectionChanged="ComboBox_SelectionChanged_Dest" SelectedIndex="{Binding idx}"/>
         <TextBlock Margin="955,549,0,0" Text="Czetter Gábor Péter" TextWrapping="Wrap" Foreground="LightGray" VerticalAlignment="Stretch"/>
         <TextBox HorizontalAlignment="Left" Margin="663,117,0,0"  VerticalAlignment="Top" Width="370" BorderThickness="2" BorderBrush="LightGray"
                  FontSize="20"  IsReadOnly="True" Text="{Binding mainResult}" />
@@ -35,9 +38,10 @@
             FontSize="15" Foreground="Gray" Margin="500,23,0,0" ItemsSource="{Binding examplesDest}"/>
         </Grid>
         <ProgressRing  HorizontalAlignment="Left" Margin="518,201,0,0" VerticalAlignment="Top" Height="44" Width="44" IsActive="{Binding isLoading}"/>
+      
 
     </Grid>
-    
-    
+
+
 
 </Page>

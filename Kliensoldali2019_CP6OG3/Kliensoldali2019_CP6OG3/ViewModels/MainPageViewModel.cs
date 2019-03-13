@@ -117,7 +117,6 @@ namespace Kliensoldali2019_CP6OG3.ViewModels
             }
             catch (Exception e)
             {
-                Debug.WriteLine("EXCEPTION: " + e.Message);
                 ManageTranslationException(e);
             }
             finally
@@ -128,10 +127,7 @@ namespace Kliensoldali2019_CP6OG3.ViewModels
         }
         private void ManageTranslationException(Exception e)
         {
-            if(e.Message == "404")
-            {
-                mainResult = "Nincs találat :(";
-            }
+            mainResult = e.Message;
         }
 
         private void ResetView()
