@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace Kliensoldali2019_CP6OG3.Services
 {
+    //Translator object to handle the translations, make the conversion from the name of the language to the code of it.
     public class Translator
     {
-        public Dictionary<String, List<String>> languageDictionary;
+        public Dictionary<String, List<String>> languageDictionary;         //for storing all the avaiable language combinations
         String sourcelang;
         String destlang;
         public String sourceLang { get { return this.sourcelang; } set { sourcelang = GetSourceID(value);} }
@@ -39,6 +40,14 @@ namespace Kliensoldali2019_CP6OG3.Services
             return await r.requestJsonResult(uri);
         }
 
+        public async Task<JsonSynonymAntonym> GetSynonymAntonym(String word)
+        {
+            String word_id = word.ToLower();
+            String uri = "https://od-api.oxforddictionaries.com:443/api/v1/entries/en/" + word+"/synonyms;antonyms";
+            return await r.RequestJsonSynonymAntonym(uri);
+        }
+
+        //filling the dictionary with the posibble language combinations, so no further Http request will be required
         private void SetLanguagesFromJson()
         {
             foreach (LanguageResult lr in languages.results)
@@ -58,7 +67,7 @@ namespace Kliensoldali2019_CP6OG3.Services
             }
 
         }
-
+        //returns the available source languages
         public String[] GetSourceLanguages()
         {
 
@@ -70,13 +79,14 @@ namespace Kliensoldali2019_CP6OG3.Services
             String[] array = list.ToArray();
             return array;
         }
-
+        //returns the available target languages for the given source
         public String[] GetTargetLanguages(String source)
         {
             List<String> list = languageDictionary[source];
             return list.ToArray();
         }
 
+        //functions for internal conversion
         private String GetSourceID(String language)
         {
             foreach (LanguageResult lr in languages.results)

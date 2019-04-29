@@ -94,6 +94,7 @@
     </Compile>
     <Compile Include="Models\JsonLanguage.cs" />
     <Compile Include="Models\JsonResult.cs" />
+    <Compile Include="Models\JsonSynonymAntonym.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Requester.cs" />
     <Compile Include="Services\Translator.cs" />

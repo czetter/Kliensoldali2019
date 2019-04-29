@@ -68,6 +68,19 @@ namespace Kliensoldali2019_CP6OG3.ViewModels
             get { return _isLoading; }
             set { Set(ref _isLoading, value); }
         }
+        private string _synonyms;
+        public string synonyms
+        {
+            get { return _synonyms; }
+            set { Set(ref _synonyms, value); }
+        }
+        private string _antonyms;
+        public string antonyms
+        {
+            get { return _antonyms; }
+            set { Set(ref _antonyms, value); }
+        }
+
 
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
@@ -89,7 +102,7 @@ namespace Kliensoldali2019_CP6OG3.ViewModels
             ResetView();
             Debug.WriteLine("CURRENT LANGUGAES: " + Translator.sourceLang + " -> " + Translator.destLang);
             isLoading = true;
-            if(toTranslate == "")
+            if (toTranslate == "")       // We need something to translate
             {
                 isLoading = false;
                 toTranslate = "Ez a mező nem lehet üres!";
@@ -109,11 +122,21 @@ namespace Kliensoldali2019_CP6OG3.ViewModels
                         otherResults += str + ", ";
                     }
                 }
-                if (otherResults.Length > 0)
-                {
-                    otherResults = otherResults.Remove(otherResults.Length - 2);
-                }
+                otherResults = RemoveLastComma(otherResults);
                 setExamples(r);
+                if (Translator.sourceLang == "en")
+                {
+                    try
+                    {
+                        await GetSynonymAntonym();
+                    }
+                    catch (Exception e)     //Probably Http 404
+                    {
+                        synonyms = "Nincs találat.";
+                        antonyms = "Nincs találat.";
+                    }
+
+                }
             }
             catch (Exception e)
             {
@@ -123,13 +146,39 @@ namespace Kliensoldali2019_CP6OG3.ViewModels
             {
                 isLoading = false;
             }
-            
+
         }
+
+        //Gets the synonyms and antonyms for the given word
+        //the API makes it available only for english language
+        private async Task GetSynonymAntonym()
+        {
+            synonyms = "";
+            antonyms = "";
+            JsonSynonymAntonym jsa = await Translator.GetSynonymAntonym(toTranslate);
+            List<string> synonymlist = jsa.GetSynonyms();
+            foreach (string s in synonymlist)
+            {
+                synonyms += s + ", ";
+            }
+            synonyms = RemoveLastComma(synonyms);
+
+            List<string> antonymlist = jsa.GetAntonyms();
+            foreach (string a in antonymlist)
+            {
+                antonyms += a + ", ";
+            }
+            antonyms = RemoveLastComma(antonyms);
+
+        }
+        //Manages the exeptions during the translation
         private void ManageTranslationException(Exception e)
         {
             mainResult = e.Message;
         }
 
+
+        //Clears all the fields when a new translation is started
         private void ResetView()
         {
             mainResult = "";
@@ -137,7 +186,7 @@ namespace Kliensoldali2019_CP6OG3.ViewModels
             examplesSource = Array.Empty<string>();
             examplesDest = Array.Empty<string>();
         }
-
+        //Sets the examples
         private void setExamples(JsonResult r)
         {
             List<string> source = new List<string>();
@@ -160,10 +209,21 @@ namespace Kliensoldali2019_CP6OG3.ViewModels
             examplesDest = dest.ToArray();
         }
 
+        //When the source language changed, this function updates the available languages for the current source
         public void UpdateLanguages(string sourceLang)
         {
             targetLanguages = Translator.GetTargetLanguages(sourceLang);
 
+        }
+
+
+        public string RemoveLastComma(string s)
+        {
+            if (s.Length > 0)
+            {
+                return s.Remove(s.Length - 2);
+            }
+            return s;
         }
     }
 }

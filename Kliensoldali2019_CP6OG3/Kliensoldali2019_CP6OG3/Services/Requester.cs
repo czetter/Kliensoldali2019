@@ -17,6 +17,7 @@ namespace Kliensoldali2019_CP6OG3.Services
         private String appKey = "bb515d22c13334820a254ca4484e8add";
 
         //Use try-catch
+        //Function for requesting translation 
         public async Task<JsonResult> requestJsonResult(String uri)
         {
             return await GetAsync<JsonResult>(uri);
@@ -24,26 +25,36 @@ namespace Kliensoldali2019_CP6OG3.Services
         }
 
         //Use try-catch
+        //Function for requesting the avaiable languages
         public async Task<JsonLanguage> requestJsonLanguage(String uri)
         {
             return await GetAsync<JsonLanguage>(uri);
         }
-        
+
+        public async Task<JsonSynonymAntonym> RequestJsonSynonymAntonym(String uri)
+        {
+            return await GetAsync<JsonSynonymAntonym>(uri);
+        }
+
+        //Generic async get function
         private async Task<T> GetAsync<T>(String uri)
         {
             HttpWebRequest req = null;
             req = (HttpWebRequest)HttpWebRequest.Create(uri);
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("app_id", appID);
-            client.DefaultRequestHeaders.Add("app_key", appKey);
-            var response = await client.GetAsync(uri);
-            var json = await response.Content.ReadAsStringAsync();
-            ManageResponse(response.StatusCode);
-            T result = JsonConvert.DeserializeObject<T>(json);
-            return result;
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("app_id", appID);
+                client.DefaultRequestHeaders.Add("app_key", appKey);
+                var response = await client.GetAsync(uri);
+                var json = await response.Content.ReadAsStringAsync();
+                ManageResponse(response.StatusCode);
+                T result = JsonConvert.DeserializeObject<T>(json);
+                return result;
+            }
+            
 
         }
-
+        //Manages the response of the Http request in the GetAsync function
         private void ManageResponse(HttpStatusCode statusCode)
         {
             Debug.WriteLine("Requester.cs/ManageResponse " + statusCode + ", " + (int)statusCode);
@@ -55,7 +66,7 @@ namespace Kliensoldali2019_CP6OG3.Services
                 case 400:
                     return;
                 case 404:
-                    throw new Exception("Nincs találat :(");
+                    throw new Exception("Nincs találat.");
                 case 500:
                     throw new Exception("Internal Error");
                 default:

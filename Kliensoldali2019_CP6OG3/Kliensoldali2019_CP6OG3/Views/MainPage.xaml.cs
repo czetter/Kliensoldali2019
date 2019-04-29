@@ -15,7 +15,7 @@ namespace Kliensoldali2019_CP6OG3.Views
 
         private void btnTranslate_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.Translate();
+             ViewModel.Translate();
         }
 
         private void ComboBox_SelectionChanged_Source(object sender, SelectionChangedEventArgs e)
