@@ -91,8 +91,8 @@ namespace Kliensoldali2019_CP6OG3.ViewModels
             sourceLanguages = Translator.GetSourceLanguages();
             targetLanguages = Translator.GetTargetLanguages(sourceLanguages[0]);
             toTranslate = "";
-            Translator.sourceLang = sourceLanguages[0];
-            Translator.destLang = targetLanguages[7];
+            //    Translator.sourceLang = sourceLanguages[0];
+            //    Translator.destLang = targetLanguages[7];
             await base.OnNavigatedToAsync(parameter, mode, state);
             isLoading = false;
         }
@@ -169,7 +169,10 @@ namespace Kliensoldali2019_CP6OG3.ViewModels
                 antonyms += a + ", ";
             }
             antonyms = RemoveLastComma(antonyms);
-
+            if (antonyms == "")
+                antonyms = "Nincs találat.";
+            if (synonyms == "")
+                synonyms = "Nincs találat.";
         }
         //Manages the exeptions during the translation
         private void ManageTranslationException(Exception e)
