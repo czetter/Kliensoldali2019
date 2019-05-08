@@ -12,8 +12,8 @@ namespace Kliensoldali2019_CP6OG3.Services
     public class Translator
     {
         public Dictionary<String, List<String>> languageDictionary;         //for storing all the avaiable language combinations
-        String sourcelang;
-        String destlang;
+        String sourcelang = "";
+        String destlang= "";
         public String sourceLang { get { return this.sourcelang; } set { sourcelang = GetSourceID(value);} }
         public String destLang { get { return this.destlang; } set { destlang = GetTargetID(value);  } }
         private JsonLanguage languages;

@@ -108,6 +108,18 @@ namespace Kliensoldali2019_CP6OG3.ViewModels
                 toTranslate = "Ez a mező nem lehet üres!";
                 return;
             }
+            if(Translator.sourceLang == "")
+            {
+                isLoading = false;
+                toTranslate = "A forrásnyelv nem lehet üres";
+                return;
+            }
+            if (Translator.destLang == "")
+            {
+                isLoading = false;
+                toTranslate = "A célnyelv nem lehet üres";
+                return;
+            }
             try
             {
                 JsonResult r = await Translator.translate(_toTranslate);
